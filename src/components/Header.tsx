@@ -8,6 +8,7 @@ export default function Header() {
     { name: 'スタッフ', href: '#staff' },
     { name: 'Twitter', href: '#twitter' },
     { name: 'ニュース', href: '#news' },
+    { name: 'ガイドライン', href: '/guidelines' },
   ]
 
   return (
