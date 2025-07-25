@@ -5,8 +5,8 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/memOredit.github.io' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/memOredit.github.io/' : '',
+  basePath: '',
+  assetPrefix: './',
 }
 
 module.exports = nextConfig
