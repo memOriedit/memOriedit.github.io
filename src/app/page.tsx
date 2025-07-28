@@ -11,11 +11,9 @@ export default function Home() {
     <main>
       <Header />
       <Hero />
-      <Characters />
+      <News />
       <GameAppeal />
       <Staff />
-      <TwitterEmbed />
-      <News />
     </main>
   )
 }

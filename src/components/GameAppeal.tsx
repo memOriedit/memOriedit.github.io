@@ -1,67 +1,75 @@
 ﻿export default function GameAppeal() {
-  const features = [
-    {
-      icon: "🌍",
-      title: "広大なオープンワールド",
-      description: "自由に探索できる美しい世界。隠された秘密や宝物を発見しよう。"
-    },
-    {
-      icon: "⚔️",
-      title: "戦略的バトルシステム",
-      description: "スキルと戦略を駆使した奥深いバトル。仲間との連携が勝利の鍵。"
-    },
-    {
-      icon: "🎭",
-      title: "感動のストーリー",
-      description: "心を揺さぶる壮大な物語。キャラクターたちの成長を見守ろう。"
-    },
-    {
-      icon: "👥",
-      title: "マルチプレイ対応",
-      description: "友達と一緒に冒険を楽しもう。協力プレイで困難を乗り越えよう。"
-    },
-    {
-      icon: "🎨",
-      title: "美麗なグラフィック",
-      description: "最新技術による圧倒的な映像美。没入感あふれる世界を体験。"
-    },
-    {
-      icon: "🎵",
-      title: "壮大なサウンドトラック",
-      description: "有名作曲家による感動的な音楽。冒険を彩る美しいメロディー。"
-    }
-  ]
-
   return (
-    <section id="appeal" className="section-padding bg-white">
-      <div className="container-max">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
-          ゲームの魅力
-        </h2>
-        <p className="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
-          このゲームでしか体験できない特別な要素をご紹介
-        </p>
+    <section id="appeal" className="section-padding bg-gradient-to-b from-gray-900 to-black text-white">
+      <div className="container-max max-w-4xl">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div key={index} className="text-center p-6 rounded-lg hover:bg-gray-50 transition-colors duration-300">
-              <div className="text-6xl mb-4">{feature.icon}</div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-800">{feature.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-            </div>
-          ))}
+        {/* 注意事項 */}
+        <div className="text-center mb-16">
+          <div className="text-6xl mb-6">⚠️</div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-red-300">
+            【注意事項】←ぜったいよめ
+          </h2>
+          <div className="bg-red-900/30 border border-red-500/50 p-6 rounded-lg mb-4">
+            <p className="text-gray-200 leading-relaxed mb-4">・当店は施術失敗時におけるお客様の安全を保障しません。</p>
+            <p className="text-gray-200 leading-relaxed mb-4">・施術には後遺症(認知症・うつ病・せん妄など)が発生する恐れがあります。</p>
+            <p className="text-gray-200 leading-relaxed mb-4">・上記の事柄に対し、当店が治療費を出すことはありません。</p>
+            <p className="text-yellow-200 font-semibold">・以上の点についてご了承いただける方のみ呼び鈴を押してください。</p>
+          </div>
         </div>
 
-        {/* Call to action */}
-        <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl">
-            <h3 className="text-3xl font-bold mb-4">今すぐ冒険を始めよう！</h3>
-            <p className="text-xl mb-6">無料体験版をダウンロードして、ゲームの魅力を体感してください</p>
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg">
-              無料体験版をダウンロード
+        {/* 店名・紹介 */}
+        <div className="text-center mb-16">
+          <div className="text-6xl mb-6">🏪</div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-purple-300">
+            【おもいでや】
+          </h2>
+          <div className="space-y-6 text-lg md:text-xl text-gray-300 leading-relaxed">
+            <p>都会から二駅離れた街、妖しい雰囲気が漂う夜の街。</p>
+            <p>路地裏の階段を下った先に、その店はひっそりと。</p>
+            
+            <div className="my-8">
+              <p className="text-purple-200 font-semibold text-xl mb-2">「消したい記憶を消しましょう」</p>
+              <p className="text-purple-200 font-semibold text-xl">「消したい想いを消しましょう」</p>
+            </div>
+            
+            <p className="italic">誰もが一度は考える記憶の消去、その力を使う者は人間なのでしょうか？</p>
+          </div>
+        </div>
+
+        {/* 仕事内容 */}
+        <div className="text-center mb-16">
+          <div className="text-6xl mb-6">💭</div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-blue-300">
+            【仕事の内容】
+          </h2>
+          <div className="space-y-6 text-lg md:text-xl text-gray-300 leading-relaxed">
+            <p>会話と記憶、異なる二つの情報を探るアドベンチャー。</p>
+            <p>やってくるお客さんは悩みを抱えていますが、店主がそれに答えるかどうかはあなた次第。</p>
+            <p>嘘を見抜き、真意を詳らかにしましょう。大丈夫、難しいことではありません。</p>
+          </div>
+        </div>
+
+        {/* 店主の言葉 */}
+        <div className="text-center mb-16">
+          <blockquote className="text-2xl md:text-3xl italic text-purple-200 mb-6 leading-relaxed">
+            「相手の望みを聞き出す、あとは適当にやるだけだよ」
+          </blockquote>
+          <p className="text-xl md:text-2xl text-gray-400">──ほらね？</p>
+        </div>
+
+        {/*
+
+        Call to action
+        <div className="text-center">
+          <div className="bg-gradient-to-r from-purple-900/80 to-red-900/80 text-white p-8 rounded-2xl border border-purple-500/30 backdrop-blur-sm">
+            <h3 className="text-3xl font-bold mb-4 text-purple-200">記憶の扉を開く準備はできましたか？</h3>
+            <p className="text-xl mb-6 text-gray-300">深い夜の街で、あなたを待つ謎めいた物語</p>
+            <button className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-colors duration-200 shadow-lg border border-purple-400/50">
+              呼び鈴を押す
             </button>
           </div>
         </div>
+        */}
       </div>
     </section>
   )

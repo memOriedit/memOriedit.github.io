@@ -54,45 +54,45 @@ export default function News() {
 
   const getCategoryColor = (category: string) => {
     const colors: { [key: string]: string } = {
-      'キャラクター': 'bg-blue-100 text-blue-800',
-      'アップデート': 'bg-green-100 text-green-800',
-      'コンテンツ': 'bg-purple-100 text-purple-800',
-      'インタビュー': 'bg-orange-100 text-orange-800',
-      '音楽': 'bg-pink-100 text-pink-800',
-      'お知らせ': 'bg-gray-100 text-gray-800'
+      'キャラクター': 'bg-blue-900/50 text-blue-300 border border-blue-500/30',
+      'アップデート': 'bg-green-900/50 text-green-300 border border-green-500/30',
+      'コンテンツ': 'bg-purple-900/50 text-purple-300 border border-purple-500/30',
+      'インタビュー': 'bg-orange-900/50 text-orange-300 border border-orange-500/30',
+      '音楽': 'bg-pink-900/50 text-pink-300 border border-pink-500/30',
+      'お知らせ': 'bg-gray-700/50 text-gray-300 border border-gray-500/30'
     }
-    return colors[category] || 'bg-gray-100 text-gray-800'
+    return colors[category] || 'bg-gray-700/50 text-gray-300 border border-gray-500/30'
   }
 
   return (
-    <section id="news" className="section-padding bg-gray-50">
+    <section id="news" className="section-padding bg-gradient-to-b from-gray-900 to-black text-white">
       <div className="container-max">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-purple-300">
           最新ニュース
         </h2>
-        <p className="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
-          ゲームの最新情報やアップデート情報をお届け
+        <p className="text-xl text-gray-300 text-center mb-16 max-w-3xl mx-auto">
+          記憶の奥に眠る物語の最新情報をお届け
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {newsArticles.map((article) => (
-            <article key={article.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <article key={article.id} className="bg-gray-800/80 rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:bg-gray-800/90 transition-all duration-300 border border-purple-500/20">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getCategoryColor(article.category)}`}>
                     {article.category}
                   </span>
-                  <time className="text-gray-500 text-sm">{article.date}</time>
+                  <time className="text-gray-400 text-sm">{article.date}</time>
                 </div>
-                <h3 className="text-xl font-bold mb-3 line-clamp-2 hover:text-blue-600 transition-colors">
+                <h3 className="text-xl font-bold mb-3 line-clamp-2 hover:text-purple-300 transition-colors text-white">
                   <Link href={`/news/${article.slug}`}>
                     {article.title}
                   </Link>
                 </h3>
-                <p className="text-gray-600 mb-4 line-clamp-3">{article.excerpt}</p>
+                <p className="text-gray-300 mb-4 line-clamp-3">{article.excerpt}</p>
                 <Link 
                   href={`/news/${article.slug}`}
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                  className="inline-flex items-center text-purple-300 hover:text-purple-200 font-semibold transition-colors"
                 >
                   続きを読む
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@ export default function News() {
         <div className="text-center mt-12">
           <Link 
             href="/news"
-            className="bg-blue-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-blue-700 transition-colors duration-200 inline-block"
+            className="bg-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-700 transition-colors duration-200 inline-block border border-purple-400/50"
           >
             すべてのニュースを見る
           </Link>

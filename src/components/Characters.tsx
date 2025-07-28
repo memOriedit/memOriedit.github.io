@@ -2,54 +2,54 @@
   const characters = [
     {
       id: 1,
-      name: "アリス",
-      role: "勇者",
-      description: "正義感が強く、仲間思いの主人公。剣術に長けており、どんな困難にも立ち向かう勇気を持つ。",
+      name: "店主",
+      role: "記憶操作師",
+      description: "謎めいた笑顔を浮かべる記憶の専門家。お客の心の奥底を見透かし、消したい記憶を巧みに操る。",
       image: "/api/placeholder/300/400"
     },
     {
       id: 2,
-      name: "レオン",
-      role: "魔法使い",
-      description: "古代魔法の研究者。冷静沈着で知識豊富。強力な魔法でパーティーをサポートする。",
+      name: "ユウ",
+      role: "悩める学生",
+      description: "過去のトラウマに苦しむ大学生。記憶を消すことで新しい人生を歩もうとしている。",
       image: "/api/placeholder/300/400"
     },
     {
       id: 3,
-      name: "サクラ",
-      role: "忍者",
-      description: "素早い動きと隠密行動が得意。情報収集と偵察を担当し、チームの影の支援者。",
+      name: "ミサキ",
+      role: "失恋の女性",
+      description: "愛する人を失った痛みから逃れたい。しかし本当に記憶を消すべきなのか迷っている。",
       image: "/api/placeholder/300/400"
     },
     {
       id: 4,
-      name: "マックス",
-      role: "戦士",
-      description: "屈強な体格と不屈の精神を持つ戦士。重装備で前線に立ち、仲間を守る盾となる。",
+      name: "タケシ",
+      role: "罪悪感を抱く男",
+      description: "過去の過ちに苛まれ続ける中年男性。記憶を消すことが本当の解決になるのだろうか。",
       image: "/api/placeholder/300/400"
     }
   ]
 
   return (
-    <section id="characters" className="section-padding bg-gray-50">
+    <section id="characters" className="section-padding bg-gradient-to-b from-black to-gray-900 text-white">
       <div className="container-max">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
-          キャラクター
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-purple-300">
+          登場人物
         </h2>
-        <p className="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
-          個性豊かなキャラクターたちと共に冒険の旅に出よう
+        <p className="text-xl text-gray-300 text-center mb-16 max-w-3xl mx-auto">
+          記憶の迷宮で出会う、心に傷を抱えた人々
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {characters.map((character) => (
-            <div key={character.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              <div className="aspect-[3/4] bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-6xl font-bold">
+            <div key={character.id} className="bg-gray-800/80 rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:bg-gray-800/90 transition-all duration-300 border border-purple-500/20">
+              <div className="aspect-[3/4] bg-gradient-to-br from-gray-700 to-purple-900 flex items-center justify-center text-purple-200 text-6xl font-bold border-b border-purple-500/30">
                 {character.name[0]}
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-bold mb-2">{character.name}</h3>
-                <p className="text-blue-600 font-semibold mb-3">{character.role}</p>
-                <p className="text-gray-600 leading-relaxed">{character.description}</p>
+                <h3 className="text-2xl font-bold mb-2 text-white">{character.name}</h3>
+                <p className="text-purple-300 font-semibold mb-3">{character.role}</p>
+                <p className="text-gray-300 leading-relaxed">{character.description}</p>
               </div>
             </div>
           ))}
