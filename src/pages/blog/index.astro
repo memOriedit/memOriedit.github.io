@@ -2,61 +2,49 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getBlogPosts, getCategories } from '../../lib/microcms';
+import { getBlogPosts, getCategories, type BlogPost } from '../../lib/microcms';
 
-// Get query parameters for category filtering
-const url = new URL(Astro.request.url);
-const categoryFilter = url.searchParams.get('category') || 'all';
-
-console.log("henoheno");
 // Get blog posts based on category filter
-let blogPosts = [];
+let blogPosts = [] as BlogPost[];
 let categories = [];
 try {
-  const postsResponse = await getBlogPosts(50, 0, categoryFilter === 'all' ? undefined : categoryFilter);
-  console.log(postsResponse);
-  blogPosts = postsResponse.contents;
-  
+  const postsResponse = await getBlogPosts(50, 0);
+  blogPosts = postsResponse.contents as BlogPost[];
+
   const categoriesResponse = await getCategories();
   categories = categoriesResponse.contents;
 } catch (error) {
   console.error('Failed to fetch blog data:', error);
 }
 
-// Filter posts by category name if needed
-if (categoryFilter === 'blog') {
-  blogPosts = blogPosts.filter(post => post.category.name === 'ブログ');
-} else if (categoryFilter === 'news') {
-  blogPosts = blogPosts.filter(post => post.category.name === 'お知らせ');
-}
 ---
 
 <BaseLayout title="ブログ - おもいでや">
   <Header />
-  
+
   <main>
     <section class="section blog-page">
       <div class="container">
         <h1>ブログ</h1>
-        
+
         <!-- Category Filter Buttons -->
         <div class="category-filters">
-          <a href="/blog" class={`filter-btn ${categoryFilter === 'all' ? 'active' : ''}`}>
-            すべて
-          </a>
-          <a href="/blog?category=blog" class={`filter-btn ${categoryFilter === 'blog' ? 'active' : ''}`}>
-            ブログ
-          </a>
-          <a href="/blog?category=news" class={`filter-btn ${categoryFilter === 'news' ? 'active' : ''}`}>
-            お知らせ
-          </a>
+          <button class="filter-btn active" data-category="all">
+              すべて
+          </button>
+          <button class="filter-btn" data-category="blog">
+              ブログ
+          </button>
+          <button class="filter-btn" data-category="news">
+              お知らせ
+          </button>
         </div>
 
         <!-- Blog Posts Grid -->
         <div class="blog-grid">
           {blogPosts.length > 0 ? (
             blogPosts.map((post) => (
-              <article class="blog-card card">
+              <article class="blog-card card" data-category={post.category.name === 'ブログ' ? 'blog' : post.category.name === 'お知らせ' ? 'news' : 'other'}>
                 <div class="blog-thumbnail">
                   {post.thumbnail ? (
                     <img src={post.thumbnail.url} alt={post.title} />
@@ -94,6 +82,60 @@ if (categoryFilter === 'blog') {
 
   <Footer />
 </BaseLayout>
+<script>
+  function initializeFilter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category') || 'all';
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-category') === category) {
+      btn.classList.add('active');
+      }
+    });
+
+      filterPosts(category);
+    }
+
+  function filterPosts(category: string) {
+    const cards = document.querySelectorAll('.blog-card') as NodeListOf<HTMLElement>;
+
+    cards.forEach(card => {
+      if (category === 'all') {
+        card.style.display = 'block';
+        } else {
+        const cardCategory = card.getAttribute('data-category');
+        card.style.display = cardCategory === category ? 'block' : 'none';
+        }
+      });
+    }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const category = btn.getAttribute('data-category') || 'all';
+
+      const url = new URL(window.location.href);
+      if (category === 'all') {
+        url.searchParams.delete('category');
+        } else {
+        url.searchParams.set('category', category);
+        }
+      window.history.pushState({}, '', url);
+
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // 記事をフィルタリング
+        filterPosts(category);
+      });
+    });
+
+  document.addEventListener('DOMContentLoaded', initializeFilter);
+
+  window.addEventListener('popstate', initializeFilter);
+</script>
 
 <style>
   .blog-page {

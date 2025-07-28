@@ -4,8 +4,6 @@
 const serviceDomain = import.meta.env.MICROCMS_SERVICE_DOMAIN;
 const apiKey = import.meta.env.MICROCMS_API_KEY;
 
-console.log(serviceDomain, apiKey);
-
 // microCMS client
 export const client = createClient({
   serviceDomain,
@@ -56,7 +54,8 @@ export interface BlogResponse {
 export const getBlogPosts = async (
   limit: number = 10,
   offset: number = 0,
-  categoryId?: string
+  categoryId?: string,
+  sortOrder: 'publishedAt' | '-publishedAt' = '-publishedAt'
 ): Promise<BlogResponse> => {
   const filters = categoryId ? `category[equals]${categoryId}` : '';
   
@@ -64,7 +63,9 @@ export const getBlogPosts = async (
     endpoint: 'blog',
     queries: {
       limit,
-      offset
+      offset,
+      orders: sortOrder,
+      filters
     },
   });
 };
