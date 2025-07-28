@@ -1,0 +1,109 @@
+﻿---
+// Footer component with links and copyright
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="https://store.steampowered.com" target="_blank" rel="noopener noreferrer" class="footer-link">
+          <span class="link-icon">🎮</span>
+          Steam
+        </a>
+        <a href="/" class="footer-link">
+          <span class="link-icon">🧠</span>
+          memOriedit
+        </a>
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="footer-link">
+          <span class="link-icon">🐦</span>
+          X (Twitter)
+        </a>
+      </div>
+      <div class="footer-copyright">
+        <p>&copy; 2025 チワワズ</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+    padding: 2rem 0;
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+
+  .footer-link:hover {
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-dark);
+  }
+
+  .link-icon {
+    font-size: 1.2rem;
+    filter: grayscale(50%);
+    transition: filter 0.3s ease;
+  }
+
+  .footer-link:hover .link-icon {
+    filter: grayscale(0%);
+  }
+
+  .footer-copyright {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    width: 100%;
+  }
+
+  .footer-copyright p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .footer-links {
+      gap: 1rem;
+    }
+
+    .footer-link {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .link-icon {
+      font-size: 1rem;
+    }
+  }
+</style>

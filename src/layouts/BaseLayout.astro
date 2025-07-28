@@ -1,0 +1,169 @@
+﻿---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "記憶を消去する店「おもいでや」" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Noto Sans JP', system-ui, sans-serif;
+    background: #0a0a0a;
+    color: #e0e0e0;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+    line-height: 1.6;
+  }
+
+  /* Dark and gloomy theme colors */
+  :root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #2a2a2a;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #808080;
+    --accent-red: #8b0000;
+    --accent-red-hover: #a00000;
+    --border-color: #333333;
+    --shadow-dark: rgba(0, 0, 0, 0.8);
+  }
+
+  /* Typography */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px var(--shadow-dark);
+  }
+
+  h2 {
+    font-size: 2rem;
+    text-shadow: 1px 1px 2px var(--shadow-dark);
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  a:hover {
+    color: var(--accent-red);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-dark);
+  }
+
+  .btn-primary {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-red-hover);
+    border-color: var(--accent-red-hover);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px var(--shadow-dark);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px var(--shadow-dark);
+  }
+
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  /* Section spacing */
+  .section {
+    padding: 4rem 0;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-red);
+  }
+</style>

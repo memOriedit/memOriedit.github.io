@@ -1,7 +1,7 @@
 ﻿{
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "module": "ES2022",
+    "module": "ESNext",
     "moduleResolution": "node",
     "target": "ES2022",
     "lib": ["ES2022", "dom"],
@@ -18,8 +18,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "types": ["astro/client"]
+    }
   },
   "include": [
     "src/**/*",

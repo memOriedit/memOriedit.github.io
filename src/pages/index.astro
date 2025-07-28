@@ -1,28 +1,388 @@
 ﻿---
-import Header from '../components/Header.astro'
-import Hero from '../components/Hero.astro'
-import Characters from '../components/Characters.astro'
-import GameAppeal from '../components/GameAppeal.astro'
-import Staff from '../components/Staff.astro'
-import TwitterEmbed from '../components/TwitterEmbed.astro'
-import News from '../components/News.astro'
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getBlogPosts } from '../lib/microcms';
+
+// Get latest 5 blog posts for the homepage
+let latestPosts = [];
+try {
+  const response = await getBlogPosts(5);
+  console.log(response);
+  latestPosts = response.contents;
+} catch (error) {
+  console.error('Failed to fetch blog posts:', error);
+}
 ---
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>memOriedit - 記憶の奥に隠された真実を探る</title>
-  <meta name="description" content="記憶の奥に隠された真実を探る。悩める心に寄り添い、消したい想いと向き合う。">
-</head>
-<body>
+<BaseLayout title="おもいでや - 記憶を消去する店">
+  <Header />
+  
   <main>
-    <Header />
-    <Hero />
-    <News />
-    <GameAppeal />
-    <Staff />
+    <!-- Main Visual Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">おもいでや</h1>
+          <p class="hero-subtitle">消したい記憶を消しましょう<br>消したい想いを消しましょう</p>
+          <div class="hero-cta">
+            <a href="https://store.steampowered.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary steam-link">
+              🎮 Steamで見る
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Latest Blog Posts Section -->
+    <section class="section latest-posts">
+      <div class="container">
+        <h2>最新ブログ記事</h2>
+        <div class="posts-grid">
+          {latestPosts.map((post) => (
+            <article class="post-card">
+              <div class="post-meta">
+                <time datetime={post.date}>{new Date(post.date).toLocaleDateString('ja-JP')}</time>
+              </div>
+              <h3 class="post-title">
+                <a href={`/blog/${post.id}`}>{post.title}</a>
+              </h3>
+            </article>
+          ))}
+        </div>
+        <div class="more-posts">
+          <a href="/blog" class="btn">もっと見る</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game Introduction Section -->
+    <section id="game" class="section game-intro">
+      <div class="container">
+        <div class="warning-notice">
+          <h2>🔴🔴🔴【⚠️ 注意事項 ⚠️】🔴🔴🔴</h2>
+          <p class="warning-subtitle">➡️ 絶対に読んでください！ ⬅️</p>
+          <p class="warning-subtitle">❗重要な内容が含まれています❗</p>
+          <p class="warning-subtitle">⛔見落とし厳禁⛔</p>
+          
+          <div class="warning-content">
+            <ul>
+              <li>・当店は施術失敗時におけるお客様の安全を保障しません。</li>
+              <li>・施術には後遺症(認知症・うつ病・せん妄など)が発生する恐れがあります。</li>
+              <li>・上記の事柄に対し、当店が治療費を出すことはありません。</li>
+              <li>・以上の点についてご了承いただける方のみ呼び鈴を押してください。</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="game-content">
+          <div class="game-section">
+            <h3>【おもいでや】</h3>
+            <div class="game-description">
+              <p>都会から二駅離れた街、妖しい雰囲気が漂う夜の街。<br>
+              路地裏の階段を下った先に、その店はひっそりと。</p>
+              
+              <p>「消したい記憶を消しましょう」<br>
+              「消したい想いを消しましょう」</p>
+              
+              <p>誰もが一度は考える記憶の消去、その力を使う者は人間なのでしょうか？</p>
+            </div>
+          </div>
+
+          <div class="game-section">
+            <h3>【仕事の内容】</h3>
+            <div class="game-description">
+              <p>会話と記憶、異なる二つの情報を探るアドベンチャー。<br>
+              やってくるお客さんは悩みを抱えていますが、店主がそれに答えるかどうかはあなた次第。<br>
+              嘘を見抜き、真意を詳らかにしましょう。大丈夫、難しいことではありません。</p>
+              
+              <blockquote>
+                「相手の望みを聞き出す、あとは適当にやるだけだよ」
+              </blockquote>
+              
+              <p class="final-note">──ほらね？</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Staff Introduction Section -->
+    <section id="staff" class="section staff-intro">
+      <div class="container">
+        <h2>スタッフ紹介</h2>
+        <div class="staff-grid">
+          <div class="staff-card card">
+            <div class="staff-avatar">
+              <img src="/images/staff/henohenon.png" alt="へのへのん" />
+            </div>
+            <div class="staff-info">
+              <h3 class="staff-role">プログラマー</h3>
+              <h4 class="staff-name">
+                <a href="/staff/henohenon">へのへのん</a>
+              </h4>
+            </div>
+          </div>
+
+          <div class="staff-card card">
+            <div class="staff-avatar">
+              <img src="/images/staff/kingyo.png" alt="キンギョ" />
+            </div>
+            <div class="staff-info">
+              <h3 class="staff-role">アーティスト</h3>
+              <h4 class="staff-name">
+                <a href="/staff/kingyo">キンギョ</a>
+              </h4>
+            </div>
+          </div>
+
+          <div class="staff-card card">
+            <div class="staff-avatar">
+              <img src="/images/staff/kyosu.jpg" alt="Kyosū!" />
+            </div>
+            <div class="staff-info">
+              <h3 class="staff-role">デザイナー</h3>
+              <h4 class="staff-name">
+                <a href="/staff/kyosu">Kyosū!</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
-</body>
-</html>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    padding: 6rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(139, 0, 0, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-title {
+    font-size: 4rem;
+    color: var(--accent-red);
+    margin-bottom: 1rem;
+    text-shadow: 3px 3px 6px var(--shadow-dark);
+  }
+
+  .hero-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+  }
+
+  .steam-link {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+  }
+
+  /* Latest Posts Section */
+  .latest-posts {
+    background: var(--bg-secondary);
+  }
+
+  .posts-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .post-card {
+    background: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-dark);
+  }
+
+  .post-meta {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .post-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .post-title a:hover {
+    color: var(--accent-red);
+  }
+
+  .more-posts {
+    text-align: center;
+  }
+
+  /* Game Introduction Section */
+  .game-intro {
+    background: var(--bg-primary);
+  }
+
+  .warning-notice {
+    background: linear-gradient(135deg, #2a0000 0%, #1a0000 100%);
+    border: 2px solid var(--accent-red);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .warning-notice h2 {
+    color: #ff4444;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .warning-subtitle {
+    color: #ffaaaa;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .warning-content {
+    text-align: left;
+    margin-top: 1.5rem;
+  }
+
+  .warning-content ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .warning-content li {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+  }
+
+  .game-content {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .game-section h3 {
+    color: var(--accent-red);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .game-description p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+  }
+
+  blockquote {
+    background: var(--bg-secondary);
+    border-left: 4px solid var(--accent-red);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--text-primary);
+  }
+
+  .final-note {
+    text-align: center;
+    font-style: italic;
+    color: var(--accent-red);
+    font-weight: bold;
+  }
+
+  /* Staff Section */
+  .staff-intro {
+    background: var(--bg-secondary);
+  }
+
+  .staff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .staff-card {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .staff-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--border-color);
+  }
+
+  .staff-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .staff-role {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .staff-name a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .staff-name a:hover {
+    color: var(--accent-red);
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+    }
+
+    .staff-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .game-content {
+      gap: 2rem;
+    }
+  }
+</style>

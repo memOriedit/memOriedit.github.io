@@ -1,0 +1,326 @@
+﻿---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getBlogPost, getBlogPosts } from '../../lib/microcms';
+
+// Get the blog post ID from the URL
+const { id } = Astro.params;
+
+// Fetch the blog post data
+let post = null;
+try {
+  post = await getBlogPost(id);
+} catch (error) {
+  console.error('Failed to fetch blog post:', error);
+  return Astro.redirect('/blog');
+}
+
+// Generate static paths for all blog posts
+export async function getStaticPaths() {
+  try {
+    const response = await getBlogPosts(100); // Get more posts for static generation
+    return response.contents.map((post) => ({
+      params: { id: post.id },
+    }));
+  } catch (error) {
+    console.error('Failed to fetch blog posts for static paths:', error);
+    return [];
+  }
+}
+
+if (!post) {
+  return Astro.redirect('/blog');
+}
+---
+
+<BaseLayout title={`${post.title} - ブログ - おもいでや`}>
+  <Header />
+  
+  <main>
+    <article class="section blog-detail">
+      <div class="container">
+        <!-- Back to Blog Link -->
+        <div class="back-link">
+          <a href="/blog" class="btn">← ブログ一覧に戻る</a>
+        </div>
+
+        <!-- Blog Post Header -->
+        <header class="post-header">
+          <h1 class="post-title">{post.title}</h1>
+          
+          <div class="post-meta">
+            <span class="post-category">{post.category.name}</span>
+            <time datetime={post.date} class="post-date">
+              {new Date(post.date).toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+            <span class="post-author">
+              著者: {post.writer.map(w => w.value).join(', ')}
+            </span>
+          </div>
+        </header>
+
+        <!-- Blog Post Thumbnail -->
+        {post.thumbnail && (
+          <div class="post-thumbnail">
+            <img src={post.thumbnail.url} alt={post.title} />
+          </div>
+        )}
+
+        <!-- Blog Post Content -->
+        <div class="post-content">
+          <div set:html={post.body} />
+        </div>
+
+        <!-- Back to Blog Link (Bottom) -->
+        <div class="back-link bottom">
+          <a href="/blog" class="btn">← ブログ一覧に戻る</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .blog-detail {
+    background: var(--bg-primary);
+    min-height: 80vh;
+  }
+
+  .back-link {
+    margin-bottom: 2rem;
+  }
+
+  .back-link.bottom {
+    margin-top: 3rem;
+    margin-bottom: 0;
+    text-align: center;
+  }
+
+  /* Post Header */
+  .post-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .post-title {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .post-category {
+    background: var(--accent-red);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .post-date {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .post-author {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* Post Thumbnail */
+  .post-thumbnail {
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .post-thumbnail img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px var(--shadow-dark);
+  }
+
+  /* Post Content */
+  .post-content {
+    background: var(--bg-secondary);
+    padding: 3rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px var(--shadow-dark);
+    line-height: 1.8;
+  }
+
+  /* Content Styling */
+  .post-content :global(h1),
+  .post-content :global(h2),
+  .post-content :global(h3),
+  .post-content :global(h4),
+  .post-content :global(h5),
+  .post-content :global(h6) {
+    color: var(--text-primary);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .post-content :global(h2) {
+    font-size: 1.8rem;
+    border-bottom: 2px solid var(--accent-red);
+    padding-bottom: 0.5rem;
+  }
+
+  .post-content :global(h3) {
+    font-size: 1.5rem;
+    color: var(--accent-red);
+  }
+
+  .post-content :global(p) {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-content :global(a) {
+    color: var(--accent-red);
+    text-decoration: underline;
+  }
+
+  .post-content :global(a:hover) {
+    color: var(--accent-red-hover);
+  }
+
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+  }
+
+  .post-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .post-content :global(blockquote) {
+    background: var(--bg-tertiary);
+    border-left: 4px solid var(--accent-red);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--text-primary);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .post-content :global(code) {
+    background: var(--bg-tertiary);
+    color: var(--accent-red);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+  }
+
+  .post-content :global(pre) {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-color);
+  }
+
+  .post-content :global(pre code) {
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+
+  .post-content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 12px var(--shadow-dark);
+  }
+
+  .post-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .post-content :global(th),
+  .post-content :global(td) {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .post-content :global(th) {
+    background: var(--accent-red);
+    color: white;
+    font-weight: 600;
+  }
+
+  .post-content :global(td) {
+    color: var(--text-secondary);
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .post-title {
+      font-size: 2rem;
+    }
+
+    .post-meta {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .post-content {
+      padding: 2rem 1.5rem;
+    }
+
+    .post-content :global(h2) {
+      font-size: 1.5rem;
+    }
+
+    .post-content :global(h3) {
+      font-size: 1.3rem;
+    }
+
+    .post-content :global(pre) {
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .post-content :global(table) {
+      font-size: 0.9rem;
+    }
+
+    .post-content :global(th),
+    .post-content :global(td) {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+</style>

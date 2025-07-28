@@ -1,0 +1,277 @@
+﻿---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getBlogPosts, getCategories } from '../../lib/microcms';
+
+// Get query parameters for category filtering
+const url = new URL(Astro.request.url);
+const categoryFilter = url.searchParams.get('category') || 'all';
+
+console.log("henoheno");
+// Get blog posts based on category filter
+let blogPosts = [];
+let categories = [];
+try {
+  const postsResponse = await getBlogPosts(50, 0, categoryFilter === 'all' ? undefined : categoryFilter);
+  console.log(postsResponse);
+  blogPosts = postsResponse.contents;
+  
+  const categoriesResponse = await getCategories();
+  categories = categoriesResponse.contents;
+} catch (error) {
+  console.error('Failed to fetch blog data:', error);
+}
+
+// Filter posts by category name if needed
+if (categoryFilter === 'blog') {
+  blogPosts = blogPosts.filter(post => post.category.name === 'ブログ');
+} else if (categoryFilter === 'news') {
+  blogPosts = blogPosts.filter(post => post.category.name === 'お知らせ');
+}
+---
+
+<BaseLayout title="ブログ - おもいでや">
+  <Header />
+  
+  <main>
+    <section class="section blog-page">
+      <div class="container">
+        <h1>ブログ</h1>
+        
+        <!-- Category Filter Buttons -->
+        <div class="category-filters">
+          <a href="/blog" class={`filter-btn ${categoryFilter === 'all' ? 'active' : ''}`}>
+            すべて
+          </a>
+          <a href="/blog?category=blog" class={`filter-btn ${categoryFilter === 'blog' ? 'active' : ''}`}>
+            ブログ
+          </a>
+          <a href="/blog?category=news" class={`filter-btn ${categoryFilter === 'news' ? 'active' : ''}`}>
+            お知らせ
+          </a>
+        </div>
+
+        <!-- Blog Posts Grid -->
+        <div class="blog-grid">
+          {blogPosts.length > 0 ? (
+            blogPosts.map((post) => (
+              <article class="blog-card card">
+                <div class="blog-thumbnail">
+                  {post.thumbnail ? (
+                    <img src={post.thumbnail.url} alt={post.title} />
+                  ) : (
+                    <div class="no-thumbnail">
+                      <span>📝</span>
+                    </div>
+                  )}
+                </div>
+                <div class="blog-content">
+                  <div class="blog-meta">
+                    <span class="blog-category">{post.category.name}</span>
+                    <time datetime={post.date}>
+                      {new Date(post.date).toLocaleDateString('ja-JP')}
+                    </time>
+                    <span class="blog-author">
+                      {post.writer.map(w => w.value).join(', ')}
+                    </span>
+                  </div>
+                  <h2 class="blog-title">
+                    <a href={`/blog/${post.id}`}>{post.title}</a>
+                  </h2>
+                </div>
+              </article>
+            ))
+          ) : (
+            <div class="no-posts">
+              <p>記事が見つかりませんでした。</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .blog-page {
+    background: var(--bg-primary);
+    min-height: 80vh;
+  }
+
+  .blog-page h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--accent-red);
+  }
+
+  /* Category Filters */
+  .category-filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 25px;
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+
+  .filter-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-dark);
+  }
+
+  .filter-btn.active {
+    background: var(--accent-red);
+    color: white;
+    border-color: var(--accent-red);
+  }
+
+  .filter-btn.active:hover {
+    background: var(--accent-red-hover);
+    border-color: var(--accent-red-hover);
+  }
+
+  /* Blog Grid */
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .blog-card {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px var(--shadow-dark);
+  }
+
+  .blog-thumbnail {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .blog-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .blog-card:hover .blog-thumbnail img {
+    transform: scale(1.05);
+  }
+
+  .no-thumbnail {
+    font-size: 3rem;
+    color: var(--text-muted);
+  }
+
+  .blog-content {
+    padding: 1.5rem;
+  }
+
+  .blog-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .blog-category {
+    background: var(--accent-red);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .blog-author {
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .blog-title {
+    margin: 0;
+  }
+
+  .blog-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.4;
+    display: block;
+  }
+
+  .blog-title a:hover {
+    color: var(--accent-red);
+  }
+
+  /* No Posts Message */
+  .no-posts {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 2px dashed var(--border-color);
+  }
+
+  .no-posts p {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .category-filters {
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .blog-content {
+      padding: 1rem;
+    }
+
+    .blog-meta {
+      gap: 0.5rem;
+    }
+  }
+</style>
