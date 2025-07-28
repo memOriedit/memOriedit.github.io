@@ -61,7 +61,7 @@ try {
                       {new Date(post.date).toLocaleDateString('ja-JP')}
                     </time>
                     <span class="blog-author">
-                      {post.writer.map(w => w.value).join(', ')}
+                      {post.writer.map(w => w).join(', ')}
                     </span>
                   </div>
                   <h2 class="blog-title">
