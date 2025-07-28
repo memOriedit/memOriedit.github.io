@@ -2,10 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getBlogPosts } from '../lib/microcms';
+import {BlogPost, getBlogPosts} from '../lib/microcms';
 
 // Get latest 5 blog posts for the homepage
-let latestPosts = [];
+let latestPosts = [] as BlogPost[];
 try {
   const response = await getBlogPosts(5);
   latestPosts = response.contents;
@@ -116,7 +116,7 @@ try {
                     <img src="/images/staff/kingyo.png" alt="キンギョ" />
                 </div>
                 <div class="staff-info">
-                    <h3 class="staff-role">アーティスト</h3>
+                    <h3 class="staff-role">ディレクター・アート・シナリオ</h3>
                     <h4 class="staff-name">
                         <a href="https://x.com/ohuro_Kagekiha">キンギョ</a>
                     </h4>
@@ -138,7 +138,7 @@ try {
               <img src="/images/staff/kyosu.jpg" alt="Kyosū!" />
             </div>
             <div class="staff-info">
-              <h3 class="staff-role">デザイナー</h3>
+              <h3 class="staff-role">音楽</h3>
               <h4 class="staff-name">
                 <a href="https://linktr.ee/kyosuu_maginary">Kyosū!</a>
               </h4>
