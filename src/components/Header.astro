@@ -7,8 +7,7 @@
     <div class="header-content">
       <div class="logo">
         <a href="/">
-          <h1>memOriedit</h1>
-          <p class="tagline">記憶を消去する店</p>
+          <img src="/images/logo.png" alt="memOriedit" class="logo-image" />
         </a>
       </div>
       <nav class="nav">
@@ -44,20 +43,13 @@
   .logo a {
     text-decoration: none;
     color: var(--text-primary);
+    display: block;
   }
 
-  .logo h1 {
-    font-size: 2rem;
-    margin-bottom: 0.25rem;
-    color: var(--accent-red);
-    text-shadow: 2px 2px 4px var(--shadow-dark);
-  }
-
-  .tagline {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin: 0;
-    font-style: italic;
+  .logo-image {
+    height: 60px;
+    width: auto;
+    display: block;
   }
 
   .nav-list {
@@ -91,7 +83,7 @@
     left: 50%;
     width: 0;
     height: 2px;
-    background: var(--accent-red);
+    background: var(--accent-blue);
     transition: all 0.3s ease;
     transform: translateX(-50%);
   }

@@ -1,10 +1,10 @@
-﻿---
+---
 export interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = "memOriedit-記憶を消去する店「おもいでや」" } = Astro.props;
+const { title, description = "記憶を消去する店「おもいでや」" } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -14,6 +14,9 @@ const { title, description = "memOriedit-記憶を消去する店「おもいで
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
     <title>{title}</title>
   </head>
   <body>
@@ -29,7 +32,7 @@ const { title, description = "memOriedit-記憶を消去する店「おもいで
   }
 
   html {
-    font-family: 'Noto Sans JP', system-ui, sans-serif;
+    font-family: 'DotGothic16', monospace;
     background: #0a0a0a;
     color: #e0e0e0;
   }
@@ -48,8 +51,8 @@ const { title, description = "memOriedit-記憶を消去する店「おもいで
     --text-primary: #e0e0e0;
     --text-secondary: #b0b0b0;
     --text-muted: #808080;
-    --accent-red: #8b0000;
-    --accent-red-hover: #a00000;
+    --accent-blue: #1e40af;
+    --accent-blue-hover: #3b82f6;
     --border-color: #333333;
     --shadow-dark: rgba(0, 0, 0, 0.8);
   }
@@ -87,7 +90,7 @@ const { title, description = "memOriedit-記憶を消去する店「おもいで
   }
 
   a:hover {
-    color: var(--accent-red);
+    color: var(--accent-blue);
   }
 
   /* Buttons */
@@ -104,22 +107,22 @@ const { title, description = "memOriedit-記憶を消去する店「おもいで
   }
 
   .btn:hover {
-    background: var(--accent-red);
-    border-color: var(--accent-red);
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--shadow-dark);
   }
 
   .btn-primary {
-    background: var(--accent-red);
-    border-color: var(--accent-red);
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
     color: white;
   }
 
   .btn-primary:hover {
-    background: var(--accent-red-hover);
-    border-color: var(--accent-red-hover);
+    background: var(--accent-blue-hover);
+    border-color: var(--accent-blue-hover);
   }
 
   /* Cards */
@@ -164,6 +167,6 @@ const { title, description = "memOriedit-記憶を消去する店「おもいで
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-red);
+    background: var(--accent-blue);
   }
 </style>

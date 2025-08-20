@@ -16,17 +16,16 @@ try {
 
 <BaseLayout title="memOriedit - 記憶を消去する店">
   <Header />
-  
+
   <main>
     <!-- Main Visual Section -->
     <section class="hero">
       <div class="container">
         <div class="hero-content">
-          <h1 class="hero-title">memOriedit</h1>
-          <p class="hero-subtitle">消したい記憶を消しましょう<br>消したい想いを消しましょう</p>
+          <p class="hero-subtitle">消したい記憶はありますか。忘れたい想いはありますか。<br>ここで叶えてあげましょう。あなたを殺してあげましょう。<br><br>記憶を覗き、想いを暴き、苦悩に向き合うカウンセリングアドベンチャー。<br>依頼者の悩みを解決するのか、冷静に職務を全うするのか、決定権は常にあなたにあります。<br>失敗しても気に病むことはありません、正解の道はありません。<br>あなたに責任はありません、あなたに罪はありません。<br><br>あなたの信じる正しさが、誰かを救えますように。</p>
           <div class="hero-cta">
             <a href="https://store.steampowered.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary steam-link">
-              🎮 Steamで見る
+              Steamで見る
             </a>
           </div>
         </div>
@@ -155,34 +154,20 @@ try {
 <style>
   /* Hero Section */
   .hero {
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-    padding: 6rem 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/images/key-visual.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 8rem 0;
     text-align: center;
     position: relative;
     overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at center, rgba(139, 0, 0, 0.1) 0%, transparent 70%);
-    pointer-events: none;
+    min-height: 60vh;
   }
 
   .hero-content {
     position: relative;
     z-index: 2;
-  }
-
-  .hero-title {
-    font-size: 4rem;
-    color: var(--accent-red);
-    margin-bottom: 1rem;
-    text-shadow: 3px 3px 6px var(--shadow-dark);
   }
 
   .hero-subtitle {
@@ -235,7 +220,7 @@ try {
   }
 
   .post-title a:hover {
-    color: var(--accent-red);
+    color: var(--accent-blue);
   }
 
   .more-posts {
@@ -248,8 +233,8 @@ try {
   }
 
   .warning-notice {
-    background: linear-gradient(135deg, #2a0000 0%, #1a0000 100%);
-    border: 2px solid var(--accent-red);
+    background: linear-gradient(135deg, #002a2a 0%, #001a1a 100%);
+    border: 2px solid var(--accent-blue);
     border-radius: 8px;
     padding: 2rem;
     margin-bottom: 3rem;
@@ -257,13 +242,13 @@ try {
   }
 
   .warning-notice h2 {
-    color: #ff4444;
+    color: #4444ff;
     font-size: 1.5rem;
     margin-bottom: 1rem;
   }
 
   .warning-subtitle {
-    color: #ffaaaa;
+    color: #aaaaff;
     font-weight: bold;
     margin-bottom: 0.5rem;
   }
@@ -290,7 +275,7 @@ try {
   }
 
   .game-section h3 {
-    color: var(--accent-red);
+    color: var(--accent-blue);
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
   }
@@ -302,7 +287,7 @@ try {
 
   blockquote {
     background: var(--bg-secondary);
-    border-left: 4px solid var(--accent-red);
+    border-left: 4px solid var(--accent-blue);
     padding: 1rem 1.5rem;
     margin: 1.5rem 0;
     font-style: italic;
@@ -312,7 +297,7 @@ try {
   .final-note {
     text-align: center;
     font-style: italic;
-    color: var(--accent-red);
+    color: var(--accent-blue);
     font-weight: bold;
   }
 
@@ -361,7 +346,7 @@ try {
   }
 
   .staff-name a:hover {
-    color: var(--accent-red);
+    color: var(--accent-blue);
   }
 
   /* Mobile Responsive */
