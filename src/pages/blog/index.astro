@@ -4,6 +4,32 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getBlogPosts, getCategories, type BlogPost } from '../../lib/microcms';
 
+// Helper function to get the appropriate icon for a blog post
+function getPostIcon(post: BlogPost): string {
+  // For news/announcements, use log.png
+  if (post.category.name === 'お知らせ') {
+    return '/images/logo.png';
+  }
+
+  console.log(post.writer);
+  // For blog posts, try to use first writer's icon from staff directory
+  if (post.category.name === 'ブログ' && post.writer && post.writer.length > 0 && post.writer[0]) {
+    const firstWriter = post.writer[0].toString();
+
+    switch(firstWriter){
+      case 'キンギョ':
+        return '/images/staff/kingyo.png';
+      case 'へのへのん':
+        return '/images/staff/henohenon.png';
+      case 'Kyosū!':
+        return '/images/staff/kyosu.jpg';
+    }
+  }
+  
+  // Fallback to default icon
+  return '/images/icon.png';
+}
+
 // Get blog posts based on category filter
 let blogPosts = [] as BlogPost[];
 let categories = [];
@@ -50,9 +76,7 @@ try {
                     {post.thumbnail ? (
                       <img src={post.thumbnail.url} alt={post.title} />
                     ) : (
-                      <div class="no-thumbnail">
-                        <span>📝</span>
-                      </div>
+                      <img src={getPostIcon(post)} alt="サムネイル"/>
                     )}
                   </div>
                   <div class="blog-content">
@@ -227,17 +251,14 @@ try {
   .blog-thumbnail img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
     transition: transform 0.3s ease;
   }
 
   .blog-card-link:hover .blog-thumbnail img {
-    transform: scale(1.05);
-  }
-
-  .no-thumbnail {
-    font-size: 3rem;
-    color: var(--text-muted);
+    object-fit: contain;
+    object-position: center;
   }
 
   .blog-content {
@@ -263,8 +284,22 @@ try {
   }
 
   .blog-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     font-weight: 500;
     color: var(--text-secondary);
+  }
+
+  .author-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .author-name {
+    flex: 1;
   }
 
   .blog-title {
