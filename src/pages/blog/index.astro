@@ -44,31 +44,33 @@ try {
         <div class="blog-grid">
           {blogPosts.length > 0 ? (
             blogPosts.map((post) => (
-              <article class="blog-card card" data-category={post.category.name === 'ブログ' ? 'blog' : post.category.name === 'お知らせ' ? 'news' : 'other'}>
-                <div class="blog-thumbnail">
-                  {post.thumbnail ? (
-                    <img src={post.thumbnail.url} alt={post.title} />
-                  ) : (
-                    <div class="no-thumbnail">
-                      <span>📝</span>
-                    </div>
-                  )}
-                </div>
-                <div class="blog-content">
-                  <div class="blog-meta">
-                    <span class="blog-category">{post.category.name}</span>
-                    <time datetime={post.date}>
-                      {new Date(post.date).toLocaleDateString('ja-JP')}
-                    </time>
-                    <span class="blog-author">
-                      {post.writer.map(w => w).join(', ')}
-                    </span>
+              <a href={`/blog/${post.id}`} class="blog-card-link">
+                <article class="blog-card card" data-category={post.category.name === 'ブログ' ? 'blog' : post.category.name === 'お知らせ' ? 'news' : 'other'}>
+                  <div class="blog-thumbnail">
+                    {post.thumbnail ? (
+                      <img src={post.thumbnail.url} alt={post.title} />
+                    ) : (
+                      <div class="no-thumbnail">
+                        <span>📝</span>
+                      </div>
+                    )}
                   </div>
-                  <h2 class="blog-title">
-                    <a href={`/blog/${post.id}`}>{post.title}</a>
-                  </h2>
-                </div>
-              </article>
+                  <div class="blog-content">
+                    <div class="blog-meta">
+                      <span class="blog-category">{post.category.name}</span>
+                      <time datetime={post.date}>
+                        {new Date(post.date).toLocaleDateString('ja-JP')}
+                      </time>
+                      <span class="blog-author">
+                        {post.writer.map(w => w).join(', ')}
+                      </span>
+                    </div>
+                    <h2 class="blog-title">
+                      {post.title}
+                    </h2>
+                  </div>
+                </article>
+              </a>
             ))
           ) : (
             <div class="no-posts">
@@ -194,6 +196,12 @@ try {
     gap: 2rem;
   }
 
+  .blog-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
   .blog-card {
     background: var(--bg-secondary);
     border-radius: 12px;
@@ -201,7 +209,7 @@ try {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .blog-card:hover {
+  .blog-card-link:hover .blog-card {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px var(--shadow-dark);
   }
@@ -223,7 +231,7 @@ try {
     transition: transform 0.3s ease;
   }
 
-  .blog-card:hover .blog-thumbnail img {
+  .blog-card-link:hover .blog-thumbnail img {
     transform: scale(1.05);
   }
 
@@ -261,18 +269,13 @@ try {
 
   .blog-title {
     margin: 0;
-  }
-
-  .blog-title a {
     color: var(--text-primary);
-    text-decoration: none;
     font-size: 1.2rem;
     font-weight: 600;
     line-height: 1.4;
-    display: block;
   }
 
-  .blog-title a:hover {
+  .blog-card-link:hover .blog-title {
     color: var(--accent-blue);
   }
 

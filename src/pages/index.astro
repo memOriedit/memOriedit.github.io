@@ -38,14 +38,16 @@ try {
         <h2>最新ブログ記事</h2>
         <div class="posts-grid">
           {latestPosts.map((post) => (
-            <article class="post-card">
-              <div class="post-meta">
-                <time datetime={post.date}>{new Date(post.date).toLocaleDateString('ja-JP')}</time>
-              </div>
-              <h3 class="post-title">
-                <a href={`/blog/${post.id}`}>{post.title}</a>
-              </h3>
-            </article>
+            <a href={`/blog/${post.id}`} class="post-card-link">
+              <article class="post-card">
+                <div class="post-meta">
+                  <time datetime={post.date}>{new Date(post.date).toLocaleDateString('ja-JP')}</time>
+                </div>
+                <h3 class="post-title">
+                  {post.title}
+                </h3>
+              </article>
+            </a>
           ))}
         </div>
         <div class="more-posts">
@@ -110,39 +112,45 @@ try {
       <div class="container">
         <h2>スタッフ紹介</h2>
         <div class="staff-grid">
-            <div class="staff-card card">
-                <div class="staff-avatar">
-                    <img src="/images/staff/kingyo.png" alt="キンギョ" />
+            <a href="https://x.com/ohuro_Kagekiha" target="_blank" rel="noopener noreferrer" class="staff-card-link">
+                <div class="staff-card card">
+                    <div class="staff-avatar">
+                        <img src="/images/staff/kingyo.png" alt="キンギョ" />
+                    </div>
+                    <div class="staff-info">
+                        <h3 class="staff-role">ディレクター・アート・シナリオ</h3>
+                        <h4 class="staff-name">
+                            キンギョ
+                        </h4>
+                    </div>
                 </div>
-                <div class="staff-info">
-                    <h3 class="staff-role">ディレクター・アート・シナリオ</h3>
-                    <h4 class="staff-name">
-                        <a href="https://x.com/ohuro_Kagekiha">キンギョ</a>
-                    </h4>
+            </a>
+            <a href="https://x.com/henohenon_8282" target="_blank" rel="noopener noreferrer" class="staff-card-link">
+                <div class="staff-card card">
+                    <div class="staff-avatar">
+                        <img src="/images/staff/henohenon.png" alt="へのへのん" />
+                    </div>
+                    <div class="staff-info">
+                        <h3 class="staff-role">プログラム・進行</h3>
+                        <h4 class="staff-name">
+                            へのへのん
+                        </h4>
+                    </div>
                 </div>
-            </div>
-            <div class="staff-card card">
-            <div class="staff-avatar">
-              <img src="/images/staff/henohenon.png" alt="へのへのん" />
-            </div>
-            <div class="staff-info">
-              <h3 class="staff-role">プログラム・進行</h3>
-              <h4 class="staff-name">
-                <a href="https://x.com/henohenon_8282">へのへのん</a>
-              </h4>
-            </div>
-          </div>
-          <div class="staff-card card">
-            <div class="staff-avatar">
-              <img src="/images/staff/kyosu.jpg" alt="Kyosū!" />
-            </div>
-            <div class="staff-info">
-              <h3 class="staff-role">音楽</h3>
-              <h4 class="staff-name">
-                <a href="https://linktr.ee/kyosuu_maginary">Kyosū!</a>
-              </h4>
-            </div>
-          </div>
+            </a>
+            <a href="https://linktr.ee/kyosuu_maginary" target="_blank" rel="noopener noreferrer" class="staff-card-link">
+                <div class="staff-card card">
+                    <div class="staff-avatar">
+                        <img src="/images/staff/kyosu.jpg" alt="Kyosū!" />
+                    </div>
+                    <div class="staff-info">
+                        <h3 class="staff-role">音楽</h3>
+                        <h4 class="staff-name">
+                            Kyosū!
+                        </h4>
+                    </div>
+                </div>
+            </a>
         </div>
       </div>
     </section>
@@ -193,6 +201,12 @@ try {
     margin-bottom: 2rem;
   }
 
+  .post-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
   .post-card {
     background: var(--bg-tertiary);
     padding: 1.5rem;
@@ -201,7 +215,7 @@ try {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .post-card:hover {
+  .post-card-link:hover .post-card {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px var(--shadow-dark);
   }
@@ -212,14 +226,14 @@ try {
     margin-bottom: 0.5rem;
   }
 
-  .post-title a {
+  .post-title {
     color: var(--text-primary);
-    text-decoration: none;
     font-size: 1.1rem;
     font-weight: 600;
+    margin: 0;
   }
 
-  .post-title a:hover {
+  .post-card-link:hover .post-title {
     color: var(--accent-blue);
   }
 
@@ -312,9 +326,21 @@ try {
     gap: 2rem;
   }
 
+  .staff-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
   .staff-card {
     text-align: center;
     padding: 2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .staff-card-link:hover .staff-card {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-dark);
   }
 
   .staff-avatar {
@@ -338,14 +364,14 @@ try {
     margin-bottom: 0.5rem;
   }
 
-  .staff-name a {
+  .staff-name {
     color: var(--text-primary);
-    text-decoration: none;
     font-size: 1.3rem;
     font-weight: 600;
+    margin: 0;
   }
 
-  .staff-name a:hover {
+  .staff-card-link:hover .staff-name {
     color: var(--accent-blue);
   }
 
