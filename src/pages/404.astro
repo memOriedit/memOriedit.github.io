@@ -1,0 +1,124 @@
+﻿---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="404 - ページが見つかりません | memOriedit">
+  <Header />
+
+  <main>
+    <section class="error-section">
+      <div class="container">
+        <div class="error-content">
+          <div class="error-display">
+            <span class="error-number">4</span>
+            <img src="/images/icon.png" alt="memOriedit icon" class="error-icon" />
+            <span class="error-number">4</span>
+          </div>
+          <h1 class="error-title">ページが見つかりません</h1>
+          <p class="error-message">
+            お探しのページは存在しないか、移動された可能性があります。<br>
+            記憶と同じように、消えてしまったのかもしれません。
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .error-section {
+    min-height: calc(100vh - 268px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+  }
+
+  .error-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .error-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 1.5rem;
+  }
+
+  .error-number {
+    font-size: 8rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    text-shadow: 4px 4px 8px var(--shadow-dark);
+    line-height: 1;
+    font-family: 'DotGothic16', monospace;
+  }
+
+  .error-icon {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    filter: drop-shadow(2px 2px 4px var(--shadow-dark));
+  }
+
+  .error-title {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px var(--shadow-dark);
+  }
+
+  .error-message {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .error-number {
+      font-size: 5rem;
+    }
+
+    .error-icon {
+      width: 75px;
+      height: 75px;
+    }
+
+    .error-title {
+      font-size: 2rem;
+    }
+
+    .error-message {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .error-display {
+      gap: 0.75rem;
+    }
+
+    .error-number {
+      font-size: 4rem;
+    }
+
+    .error-icon {
+      width: 60px;
+      height: 60px;
+    }
+
+    .error-content {
+      padding: 1rem;
+    }
+  }
+</style>
