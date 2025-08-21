@@ -2,9 +2,19 @@
 export interface Props {
   title: string;
   description?: string;
+  image?: string;
+  type?: string;
 }
 
-const { title, description = "記憶を消去する店「おもいでや」" } = Astro.props;
+const { 
+  title, 
+  description = "消したい記憶はありますか。記憶を覗き、想いを暴き、苦悩に向き合うカウンセリングアドベンチャー「memOriedit」。依頼者の悩みを解決するのか、冷静に職務を全うするのか、決定権は常にあなたにあります。", 
+  image = "/images/key-visual.png",
+  type = "website"
+} = Astro.props;
+
+const siteUrl = "https://memoriedit.github.io";
+const fullImageUrl = new URL(image, siteUrl).toString();
 ---
 
 <!DOCTYPE html>
@@ -14,6 +24,30 @@ const { title, description = "記憶を消去する店「おもいでや」" } =
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-site-verification" content="R2MKHnZrjePCx1lDZDYuwTua2v6G_A6Mhf615Si8mSQ" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullImageUrl} />
+    <meta property="og:image:alt" content="memOriedit - 記憶を消去する店「おもいでや」のカウンセリングアドベンチャーゲーム" />
+    <meta property="og:site_name" content="memOriedit" />
+    <meta property="og:locale" content="ja_JP" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={fullImageUrl} />
+    <meta property="twitter:image:alt" content="memOriedit - 記憶を消去する店「おもいでや」のカウンセリングアドベンチャーゲーム" />
+    
+    <!-- Additional SEO -->
+    <meta name="keywords" content="memOriedit,おもいでや,記憶消去,アドベンチャーゲーム,カウンセリング,インディーゲーム,Steam" />
+    <meta name="author" content="memOriedit" />
+    <link rel="canonical" href={Astro.url} />
+    
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
