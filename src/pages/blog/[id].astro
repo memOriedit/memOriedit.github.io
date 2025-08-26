@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getBlogPost, getBlogPosts } from '../../lib/microcms';
+import { createDescriptionFromHtml } from '../../utils/textUtils';
 
 // Get the blog post ID from the URL
 const { id } = Astro.params;
@@ -32,9 +33,12 @@ export async function getStaticPaths() {
 if (!post) {
   return Astro.redirect('/blog');
 }
+
+// Generate description from blog post content
+const description = createDescriptionFromHtml(post.body);
 ---
 
-<BaseLayout title={`${post.title} - ブログ - memOriedit`}>
+<BaseLayout title={`${post.title} - ブログ - memOriedit`} description={description}>
   <Header />
   
   <main>
