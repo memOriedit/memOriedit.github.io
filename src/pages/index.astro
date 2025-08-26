@@ -12,9 +12,13 @@ try {
 } catch (error) {
   console.error('Failed to fetch blog posts:', error);
 }
+
+// Preload hero image for better LCP
+const heroImageUrl = '/images/key-visual.png';
 ---
 
 <BaseLayout title="memOriedit">
+  <link slot="head" rel="preload" href={heroImageUrl} as="image" />
   <Header />
 
   <main>
@@ -115,7 +119,7 @@ try {
             <a href="https://x.com/ohuro_Kagekiha" target="_blank" rel="noopener noreferrer" class="staff-card-link">
                 <div class="staff-card card">
                     <div class="staff-avatar">
-                        <img src="/images/staff/kingyo.png" alt="キンギョ" />
+                        <img src="/images/staff/kingyo.png" alt="キンギョ - ディレクター・アート・シナリオ担当" loading="lazy" width="80" height="80" />
                     </div>
                     <div class="staff-info">
                         <h3 class="staff-role">ディレクター・アート・シナリオ</h3>
@@ -128,7 +132,7 @@ try {
             <a href="https://x.com/henohenon_8282" target="_blank" rel="noopener noreferrer" class="staff-card-link">
                 <div class="staff-card card">
                     <div class="staff-avatar">
-                        <img src="/images/staff/henohenon.png" alt="へのへのん" />
+                        <img src="/images/staff/henohenon.png" alt="へのへのん - プログラム・進行担当" loading="lazy" width="80" height="80" />
                     </div>
                     <div class="staff-info">
                         <h3 class="staff-role">プログラム・進行</h3>
@@ -141,7 +145,7 @@ try {
             <a href="https://linktr.ee/kyosuu_maginary" target="_blank" rel="noopener noreferrer" class="staff-card-link">
                 <div class="staff-card card">
                     <div class="staff-avatar">
-                        <img src="/images/staff/kyosu.jpg" alt="Kyosū!" />
+                        <img src="/images/staff/kyosu.jpg" alt="Kyosū! - 音楽担当" loading="lazy" width="80" height="80" />
                     </div>
                     <div class="staff-info">
                         <h3 class="staff-role">音楽</h3>
