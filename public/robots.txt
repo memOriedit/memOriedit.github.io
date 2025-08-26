@@ -1,0 +1,6 @@
+﻿User-agent: *
+Allow: /
+
+Sitemap: https://memoriedit.github.io/sitemap.xml
+
+Crawl-delay: 1
