@@ -8,7 +8,7 @@ import { getBlogPosts, getCategories, type BlogPost } from '../../lib/microcms';
 function getPostIcon(post: BlogPost): string {
   // For news/announcements, use log.png
   if (post.category.name === 'お知らせ') {
-    return '/images/logo.png';
+    return '/images/icon.png';
   }
 
   console.log(post.writer);
@@ -27,7 +27,7 @@ function getPostIcon(post: BlogPost): string {
   }
   
   // Fallback to default icon
-  return '/images/icon.png';
+  return '/images/logo.png';
 }
 
 // Get blog posts based on category filter
@@ -70,8 +70,8 @@ try {
         <div class="blog-grid">
           {blogPosts.length > 0 ? (
             blogPosts.map((post) => (
-              <a href={`/blog/${post.id}`} class="blog-card-link">
-                <article class="blog-card card" data-category={post.category.name === 'ブログ' ? 'blog' : post.category.name === 'お知らせ' ? 'news' : 'other'}>
+              <a href={`/blog/${post.id}`} class="blog-card-link" data-category={post.category.name === 'ブログ' ? 'blog' : post.category.name === 'お知らせ' ? 'news' : 'other'}>
+                <article class="blog-card card">
                   <div class="blog-thumbnail">
                     {post.thumbnail ? (
                       <img src={post.thumbnail.url} alt={post.title} />
@@ -124,7 +124,7 @@ try {
     }
 
   function filterPosts(category: string) {
-    const cards = document.querySelectorAll('.blog-card') as NodeListOf<HTMLElement>;
+    const cards = document.querySelectorAll('.blog-card-link') as NodeListOf<HTMLElement>;
 
     cards.forEach(card => {
       if (category === 'all') {
