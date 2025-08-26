@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getBlogPost, getBlogPosts } from '../../lib/microcms';
-import { createDescriptionFromHtml } from '../../utils/textUtils';
+import { createDescriptionFromHtml } from '../../lib/utils';
 
 // Get the blog post ID from the URL
 const { id } = Astro.params;
