@@ -8,7 +8,7 @@ import { getBlogPosts, getCategories, type BlogPost } from '../../lib/microcms';
 function getPostIcon(post: BlogPost): string {
   // For news/announcements, use log.png
   if (post.category.name === 'お知らせ') {
-    return '/images/icon.png';
+    return '/images/icon_eye.png';
   }
 
   console.log(post.writer);
