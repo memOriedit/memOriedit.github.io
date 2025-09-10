@@ -8,7 +8,7 @@ import { getBlogPosts, getCategories, type BlogPost } from '../../lib/microcms';
 function getPostIcon(post: BlogPost): string {
   // For news/announcements, use log.png
   if (post.category.name === 'お知らせ') {
-    return '/images/icon_eye.png';
+    return '/images/icon_ball.png';
   }
 
   console.log(post.writer);
@@ -75,6 +75,16 @@ try {
                   <div class="blog-thumbnail">
                     {post.thumbnail ? (
                       <img src={post.thumbnail.url} alt={post.title} />
+                    ) : post.category.name === 'お知らせ' ? (
+                      <div class="icon-hover-container">
+                        <img src="/images/icon_ball.png" alt="サムネイル" class="default-icon"/>
+                        <img src="/images/icon_eye.png" alt="サムネイル" class="hover-icon"/>
+                      </div>
+                    ) : post.writer && post.writer.length > 0 && post.writer[0].toString() === 'へのへのん' ? (
+                      <div class="icon-hover-container henohenon-hover">
+                        <img src="/images/staff/henohenon.png" alt="サムネイル" class="default-icon"/>
+                        <img src="/images/staff/hebuto.png" alt="サムネイル" class="hover-icon"/>
+                      </div>
                     ) : (
                       <img src={getPostIcon(post)} alt="サムネイル"/>
                     )}
@@ -259,6 +269,42 @@ try {
   .blog-card-link:hover .blog-thumbnail img {
     object-fit: contain;
     object-position: center;
+  }
+
+  /* Icon hover functionality for お知らせ category */
+  .icon-hover-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon-hover-container .default-icon,
+  .icon-hover-container .hover-icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    transition: opacity 0.3s ease;
+  }
+
+  .icon-hover-container .default-icon {
+    opacity: 1;
+  }
+
+  .icon-hover-container .hover-icon {
+    opacity: 0;
+  }
+
+  .blog-card-link:hover .icon-hover-container .default-icon {
+    opacity: 0;
+  }
+
+  .blog-card-link:hover .icon-hover-container .hover-icon {
+    opacity: 1;
   }
 
   .blog-content {
