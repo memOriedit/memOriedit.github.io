@@ -43,11 +43,11 @@
   }
   async function loadImages(ctx: CanvasRenderingContext2D) {
     const back = new Image();
-    back.src = "/public/images/favicon/back.png";
+    back.src = "/images/favicon/back.png";
     const eye = new Image();
-    eye.src = "/public/images/favicon/eye.png";
+    eye.src = "/images/favicon/eye.png";
     const mouth = new Image();
-    mouth.src = "/public/images/favicon/mouth.png";
+    mouth.src = "/images/favicon/mouth.png";
 
     await Promise.all([back.decode(), eye.decode(), mouth.decode()]);
 
