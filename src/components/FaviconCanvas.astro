@@ -55,7 +55,6 @@
   }
   function start(link: HTMLLinkElement, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}){
     const stored = sessionStorage.getItem(sessionItemKey);
-    console.log(stored);
     const startTime = stored ? Number(stored) : Date.now();
     if (!stored) {
       sessionStorage.setItem(sessionItemKey, startTime.toString());
