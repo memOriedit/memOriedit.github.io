@@ -1,0 +1,116 @@
+﻿---
+---
+<canvas id="favicon-canvas" width="32" height="32"></canvas>
+<script>
+  const sessionItemKey = 'memOriedit-visitStart';
+
+  const {canvas, ctx, link} = getElements();
+  loadImages(ctx).then(images => {
+    let intervalId = start(link, canvas, ctx, images);
+
+    let isNavigating = false;
+
+    window.addEventListener('beforeunload', () => {
+      isNavigating = true;
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden' && !isNavigating) {
+        clearInterval(intervalId);
+
+        drawFavicon(ctx, images, 0);
+        updateFavicon(link, canvas);
+
+        sessionStorage.removeItem(sessionItemKey);
+      }else if (document.visibilityState === 'visible') {
+        intervalId = start(link, canvas, ctx, images);
+      }
+    });
+  });
+
+  function getElements(){
+    const canvas = document.getElementById('favicon-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas context not available");
+    const link = document.querySelector<HTMLLinkElement>("link[rel='icon']")
+      ?? (() => {
+        const el = document.createElement("link");
+        el.rel = "icon";
+        document.head.appendChild(el);
+        return el;
+      })();
+    return {canvas, ctx, link};
+  }
+  async function loadImages(ctx: CanvasRenderingContext2D) {
+    const back = new Image();
+    back.src = "/public/images/favicon/back.png";
+    const eye = new Image();
+    eye.src = "/public/images/favicon/eye.png";
+    const mouth = new Image();
+    mouth.src = "/public/images/favicon/mouth.png";
+
+    await Promise.all([back.decode(), eye.decode(), mouth.decode()]);
+
+    return {back: back, eye: eye, mouth: mouth};
+  }
+  function start(link: HTMLLinkElement, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}){
+    const stored = sessionStorage.getItem(sessionItemKey);
+    console.log(stored);
+    const startTime = stored ? Number(stored) : Date.now();
+    if (!stored) {
+      sessionStorage.setItem(sessionItemKey, startTime.toString());
+    }
+
+    const elapsed = (Date.now() - startTime) / 1000;
+    drawFavicon(ctx, images, elapsed);
+    updateFavicon(link, canvas);
+
+    return runLoop(startTime, {link, canvas, ctx, images});
+  }
+  function runLoop(startTime: number, elements: {link: HTMLLinkElement, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}}){
+    const intervalId = setInterval(() => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      const stopAnimation = drawFavicon(elements.ctx, elements.images, elapsed / 3);
+      updateFavicon(elements.link, elements.canvas);
+      if (stopAnimation) {
+        clearInterval(intervalId);
+        return;
+      }
+    });
+    return intervalId;
+  }
+  function drawFavicon(ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}, progress: number){
+    ctx.clearRect(0, 0, 32, 32);
+    drawFillImage(images.back);
+    drawClippedImage(images.mouth, 32 * Math.max(0, progress), 32);
+    const mouthEnd = 1;
+    const eyeStart = 0.6;
+    const eyeOpenRatio = eyeStart + Math.max(0, progress - mouthEnd);
+    const eyeMoveProgress = mouthEnd + eyeStart;
+    const eyeLeftRatio = progress < eyeMoveProgress || progress > eyeMoveProgress + 2
+      ? 0
+      : Math.sin((progress - eyeMoveProgress) * Math.PI);
+    drawClippedImage(images.eye, 32, 32 * Math.max(0, eyeOpenRatio), 2 * eyeLeftRatio);
+    return progress > eyeMoveProgress + 2;
+  }
+
+  function drawFillImage(image: Image){
+    ctx.drawImage(image, 0, 0, 32, 32);
+  }
+  function drawClippedImage(image: Image, width: number, height: number, left: number = 0){
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, width, height);
+    ctx.clip();
+    ctx.drawImage(image, left, 0, 32, 32);
+    ctx.restore();
+  }
+  function updateFavicon(link: HTMLLinkElement, canvas: HTMLCanvasElement){
+    link.href = canvas.toDataURL("image/png");
+  }
+</script>
+<style>
+    #favicon-canvas{
+        visibility: hidden;
+    }
+</style>

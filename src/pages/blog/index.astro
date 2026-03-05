@@ -1,5 +1,6 @@
 ﻿---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import FaviconCanvas from '../../components/FaviconCanvas.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getBlogPosts, getCategories, type BlogPost } from '../../lib/microcms';
@@ -117,6 +118,7 @@ try {
   </main>
 
   <Footer />
+  <FaviconCanvas />
 </BaseLayout>
 <script>
   function initializeFilter() {
