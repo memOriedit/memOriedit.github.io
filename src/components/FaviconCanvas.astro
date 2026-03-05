@@ -5,8 +5,11 @@
   const sessionItemKey = 'memOriedit-visitStart';
 
   const {canvas, ctx, link} = getElements();
-  loadImages(ctx).then(images => {
+  loadImages().then(images => {
     let intervalId = start(link, canvas, ctx, images);
+    if (document.visibilityState === 'hidden') {
+      stopLoop(intervalId, {link, canvas, ctx, images});
+    }
 
     let isNavigating = false;
 
@@ -16,12 +19,7 @@
 
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden' && !isNavigating) {
-        clearInterval(intervalId);
-
-        drawFavicon(ctx, images, 0);
-        updateFavicon(link, canvas);
-
-        sessionStorage.removeItem(sessionItemKey);
+        stopLoop(intervalId, {link, canvas, ctx, images});
       }else if (document.visibilityState === 'visible') {
         intervalId = start(link, canvas, ctx, images);
       }
@@ -32,16 +30,11 @@
     const canvas = document.getElementById('favicon-canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("Canvas context not available");
-    const link = document.querySelector<HTMLLinkElement>("link[rel='icon']")
-      ?? (() => {
-        const el = document.createElement("link");
-        el.rel = "icon";
-        document.head.appendChild(el);
-        return el;
-      })();
+    const link = document.querySelector<HTMLLinkElement>("link[rel='icon']");
+    if (!link) throw new Error("Link element not found");
     return {canvas, ctx, link};
   }
-  async function loadImages(ctx: CanvasRenderingContext2D) {
+  async function loadImages() {
     const back = new Image();
     back.src = "/images/favicon/back.png";
     const eye = new Image();
@@ -60,10 +53,6 @@
       sessionStorage.setItem(sessionItemKey, startTime.toString());
     }
 
-    const elapsed = (Date.now() - startTime) / 1000;
-    drawFavicon(ctx, images, elapsed);
-    updateFavicon(link, canvas);
-
     return runLoop(startTime, {link, canvas, ctx, images});
   }
   function runLoop(startTime: number, elements: {link: HTMLLinkElement, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}}){
@@ -77,6 +66,14 @@
       }
     });
     return intervalId;
+  }
+  function stopLoop(intervalId: ReturnType<typeof setInterval>, elements: {link: HTMLLinkElement, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}}){
+    clearInterval(intervalId);
+
+    drawFavicon(elements.ctx, elements.images, 0);
+    updateFavicon(elements.link, elements.canvas);
+
+    sessionStorage.removeItem(sessionItemKey);
   }
   function drawFavicon(ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}, progress: number){
     ctx.clearRect(0, 0, 32, 32);
