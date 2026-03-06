@@ -2,30 +2,36 @@
 ---
 <canvas id="favicon-canvas" width="32" height="32"></canvas>
 <script>
-  const sessionItemKey = 'memOriedit-visitStart';
-
   const {canvas, ctx, link} = getElements();
-  loadImages().then(images => {
-    let intervalId = start(link, canvas, ctx, images);
-    if (document.visibilityState === 'hidden') {
-      stopLoop(intervalId, {link, canvas, ctx, images});
-    }
+  let showHideProgress = 0, lookAroundProgress = 0, nextBlink = 0, sideProgress = 0, nextSide = 0;
+  let images: {back: Image, eye: Image, mouth: Image};
+  loadImages().then(i => {
+    loadProps();
+    images = i;
+    runMainLoop();
 
+    const onHide = () => {
+      saveProps();
+      stopMainLoop();
+      runHideLoop();
+    }
+    if (document.visibilityState === 'hidden') onHide();
     let isNavigating = false;
 
     window.addEventListener('beforeunload', () => {
+      saveProps();
       isNavigating = true;
     });
 
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden' && !isNavigating) {
-        stopLoop(intervalId, {link, canvas, ctx, images});
+        onHide();
       }else if (document.visibilityState === 'visible') {
-        intervalId = start(link, canvas, ctx, images);
+        stopHideLoop();
+        runMainLoop();
       }
     });
   });
-
   function getElements(){
     const canvas = document.getElementById('favicon-canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext("2d");
@@ -44,52 +50,227 @@
 
     await Promise.all([back.decode(), eye.decode(), mouth.decode()]);
 
-    return {back: back, eye: eye, mouth: mouth};
+    return {back, eye, mouth};
   }
-  function start(link: HTMLLinkElement, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}){
-    const stored = sessionStorage.getItem(sessionItemKey);
-    const startTime = stored ? Number(stored) : Date.now();
+  const sessionItemHead = 'memOriedit';
+  const showHideItem = `${sessionItemHead}-showHide`;
+  const lookAroundItem = `${sessionItemHead}-lookAround`;
+  const blinkItem = `${sessionItemHead}-blink`;
+  const sideItem = `${sessionItemHead}-side`;
+  function loadProps() {
+    showHideProgress = getSessionItem(showHideItem);
+    lookAroundProgress = getSessionItem(lookAroundItem, 0, 1, -1);
+    nextBlink = getSessionItem(blinkItem, 0, Infinity, 0);
+    nextSide = getSessionItem(sideItem, 0, Infinity, 0);
+  }
+  function getSessionItem(key: string, defaultValue: number = 0, max: number = 1, min: number = 0){
+    const stored = sessionStorage.getItem(key);
+    const value = stored ? Number(stored) : defaultValue;
     if (!stored) {
-      sessionStorage.setItem(sessionItemKey, startTime.toString());
+      sessionStorage.setItem(key, value.toString());
     }
-
-    return runLoop(startTime, {link, canvas, ctx, images});
+    return Math.max(min, Math.min(max, value));
   }
-  function runLoop(startTime: number, elements: {link: HTMLLinkElement, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}}){
-    const intervalId = setInterval(() => {
-      const elapsed = (Date.now() - startTime) / 1000;
-      const stopAnimation = drawFavicon(elements.ctx, elements.images, elapsed / 3);
-      updateFavicon(elements.link, elements.canvas);
-      if (stopAnimation) {
-        clearInterval(intervalId);
-        return;
+  function saveProps(){
+    sessionStorage.setItem(showHideItem, showHideProgress.toString());
+    sessionStorage.setItem(lookAroundItem, lookAroundProgress.toString());
+    sessionStorage.setItem(blinkItem, nextBlink.toString());
+    sessionStorage.setItem(sideItem, nextSide.toString());
+  }
+  let prevTimestamp: DOMHighResTimeStamp;
+  let rafId: number;
+  function runMainLoop(){
+    rafId = requestAnimationFrame(t => {
+      prevTimestamp = t;
+      rafId = requestAnimationFrame(mainLoop);
+    });  }
+  function mainLoop(timestamp: DOMHighResTimeStamp){
+    const delta = timestamp - prevTimestamp;
+    prevTimestamp = timestamp;
+
+    renderMain(delta / 1000);
+
+    rafId = requestAnimationFrame(mainLoop);
+  }
+  function stopMainLoop(){
+    cancelAnimationFrame(rafId);
+  }
+  const showSpeed = 0.2;
+  const lookAroundSpeed = 0.15;
+  const blinkSpeed = 0.55;
+  const blinkDurationBase = 6000;
+  const blinkDurationRange = 7000;
+  const sideSpeed = 0.15;
+  const sideDurationBase = 8000;
+  const sideDurationRange = 8000;
+  function renderMain(deltaTime: number = 0) {
+    let mouthWidth = 1, eyeHeight = 1;
+    let changed = false;
+    if (showHideProgress < 1){
+      showHideProgress += showSpeed * deltaTime;
+      ({mouthWidth, eyeHeight} = calcShowHide(showHideProgress));
+      changed = true;
+      if (showHideProgress >= 1){
+        nextBlink = new Date(Date.now() + Math.random() * blinkDurationRange).getTime();
       }
-    });
-    return intervalId;
+    }
+    else {
+      if (lookAroundProgress < 1) {
+        lookAroundProgress += lookAroundSpeed * deltaTime;
+        changed = true;
+        if (lookAroundProgress >= 1){
+          nextSide = new Date(Date.now() + Math.random() * sideDurationRange + sideDurationBase).getTime();
+          sideProgress = 0;
+        }
+      }else{
+        const sideDelta = new Date().getTime() - nextSide;
+        if (sideDelta > 0) {
+          sideProgress = sideSpeed * sideDelta / 1000;
+          if (sideProgress >= 1){
+            nextSide = new Date(Date.now() + Math.random() * sideDurationRange + sideDurationBase).getTime();
+            sideProgress = 0;
+          }
+          changed = true;
+        }
+      }
+      const blinkDelta = new Date().getTime() - nextBlink;
+      if (blinkDelta > 0) {
+        const blinkProgress = blinkSpeed * blinkDelta / 1000;
+        if (blinkProgress >= 1){
+          nextBlink = new Date(Date.now() + Math.random() * blinkDurationRange + blinkDurationBase).getTime();
+        }
+        eyeHeight = calcBlink(blinkProgress);
+        changed = true;
+      }
+    }
+    if (changed) {
+      const eyeLeft = calcEyeLeft();
+      drawCanvas(ctx, images, mouthWidth, eyeHeight, eyeLeft);
+      updateFavicon(link, ctx.canvas);
+    }
   }
-  function stopLoop(intervalId: ReturnType<typeof setInterval>, elements: {link: HTMLLinkElement, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}}){
+  let intervalId: NodeJS.Timeout;
+  function runHideLoop(){
+    prevTimestamp = Date.now();
+    intervalId = setInterval(hideLoop, 1000 / 60);
+  }
+  function hideLoop(){
+    const current = Date.now();
+    const delta = current - prevTimestamp;
+    prevTimestamp = current;
+
+    renderHide(delta / 1000);
+    if (showHideProgress <= 0) {
+      lookAroundProgress = 0;
+      sideProgress = 0;
+      stopHideLoop();
+    }
+  }
+  function stopHideLoop(){
     clearInterval(intervalId);
-
-    drawFavicon(elements.ctx, elements.images, 0);
-    updateFavicon(elements.link, elements.canvas);
-
-    sessionStorage.removeItem(sessionItemKey);
   }
-  function drawFavicon(ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}, progress: number){
+  const hideSpeed = 0.3;
+  function renderHide(deltaTime: number = 0) {
+    let mouthWidth = 0, eyeHeight = 0;
+    if (showHideProgress >= 0){
+      showHideProgress -= hideSpeed * deltaTime;
+      ({mouthWidth, eyeHeight} = calcShowHide(showHideProgress));
+    }
+    const eyeLeft = calcEyeLeft();
+    drawCanvas(ctx, images, mouthWidth, eyeHeight, eyeLeft);
+    updateFavicon(link, ctx.canvas);
+  }
+  function calcShowHide(ratio: number){
+    ratio *= 2;
+    const mouthWidth = calcMouthWidth(ratio);
+    const eyeHeight = calcEyeHeight(ratio - 1);
+    return { mouthWidth, eyeHeight };
+  }
+  function calcMouthWidth(ratio: number){
+    return clamp(ratio, 0, 1);
+  }
+  function calcSideRatio(ratio: number){
+    const fadeIn = 0.4;   // 0→1にかける割合
+    const hold = 0.2;     // 止まる割合
+    const fadeOut = 0.4;  // 1→0にかける割合
+
+    if (ratio < fadeIn) {
+      const t = ratio / fadeIn; // 0→1にremap
+      return (Math.cos(t * Math.PI) * -1 + 1) / 2;
+    } else if (ratio < fadeIn + hold) {
+      return 1;
+    } else {
+      const t = (ratio - fadeIn - hold) / fadeOut; // 0→1にremap
+      return (Math.cos(t * Math.PI) * -1 + 1) / 2 * -1 + 1; // 1→0
+    }
+  }
+  function calcBlink(ratio: number){
+    ratio = calcBlinkRatio(ratio);
+    return calcEyeHeight(ratio);
+  }
+  function calcBlinkRatio(ratio: number){
+    ratio = clamp(ratio, 0, 1);
+    return (Math.cos(ratio * Math.PI * 2) + 1) / 2;
+  }
+  const eyeHeightMin = 0.5;
+  const eyeHeightMax = 1.0;
+  const eyeRatioMin = 0.0;
+  const eyeRatioMax = 1.0;
+  function calcEyeRatio(height: number){
+    return remapRange(height, eyeHeightMin, eyeHeightMax, eyeRatioMin, eyeRatioMax);
+  }
+  function calcEyeHeight(ratio: number){
+    return remapRange(ratio, eyeRatioMin, eyeRatioMax, eyeHeightMin, eyeHeightMax);
+  }
+  function calcLookAroundRatio(ratio: number){
+    ratio = clamp(ratio, 0, 1);
+    const rampRight = 0.25;
+    const holdRight = 0.2;
+    const rampMid = 0.1;
+    const holdLeft = 0.2;
+    const rampLeft = 0.25;
+    // 合計1.0
+
+    if (ratio < rampRight) {
+      const t = ratio / rampRight;
+      return (Math.cos(t * Math.PI) * -1 + 1) / 2;
+    } else if (ratio < rampRight + holdRight) {
+      return 1;
+    } else if (ratio < rampRight + holdRight + rampMid) {
+      const t = (ratio - rampRight - holdRight) / rampMid;
+      return 1 - t * 2;
+    } else if (ratio < rampRight + holdRight + rampMid + holdLeft) {
+      return -1;
+    } else {
+      const t = (ratio - rampRight - holdRight - rampMid - holdLeft) / rampLeft;
+      return (Math.cos(t * Math.PI) + 1) / 2 * -1;
+    }
+  }
+  function calcEyeLeft(){
+    if (lookAroundProgress < 1){
+      return calcLookAroundRatio(lookAroundProgress) * 3;
+    }
+    return calcSideRatio(sideProgress) * 2;
+  }
+  function remapRange(
+    value: number,
+    inputMin: number,
+    inputMax: number,
+    outputMin = 0,
+    outputMax = 1
+  ): number {
+    const clamped = clamp(value, inputMin, inputMax);
+    return (clamped - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin;
+  }
+  function clamp(value: number, min: number, max: number): number {
+    return Math.max(min, Math.min(value, max));
+  }
+  function drawCanvas(ctx: CanvasRenderingContext2D, images: {back: Image, eye: Image, mouth: Image}, mouthWidth: number, eyeHeight: number, eyeLeft: number){
     ctx.clearRect(0, 0, 32, 32);
     drawFillImage(images.back);
-    drawClippedImage(images.mouth, 32 * Math.max(0, progress), 32);
-    const mouthEnd = 1;
-    const eyeStart = 0.6;
-    const eyeOpenRatio = eyeStart + Math.max(0, progress - mouthEnd);
-    const eyeMoveProgress = mouthEnd + eyeStart;
-    const eyeLeftRatio = progress < eyeMoveProgress || progress > eyeMoveProgress + 2
-      ? 0
-      : Math.sin((progress - eyeMoveProgress) * Math.PI);
-    drawClippedImage(images.eye, 32, 32 * Math.max(0, eyeOpenRatio), 2 * eyeLeftRatio);
-    return progress > eyeMoveProgress + 2;
+    drawClippedImage(images.mouth, 32 * mouthWidth, 32);
+    drawClippedImage(images.eye, 32, 32 * eyeHeight, eyeLeft);
   }
-
   function drawFillImage(image: Image){
     ctx.drawImage(image, 0, 0, 32, 32);
   }
